@@ -16,20 +16,137 @@
     <form id="regForm" action="">
             
             <!-- One "tab" for each step in the form: -->
-            <div class="tab"><h3>Choose your date:</h3>
-              <p>stick a date in here</p>
-            </div>
-            
+            <div class="form-group">
             <div class="tab"><h3>Choose your bars:</h3>
-              <p>radio checklist of bars (later may add which bars are and aren't available on a particular date)</p>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="collingwood">
+                    <label class="form-check-label" for="collingwood">
+                    Collingwood
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="grey">
+                    <label class="form-check-label" for="grey">
+                    Grey
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="hatfield">
+                    <label class="form-check-label" for="hatfield">
+                    Hatfield
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="jobo">
+                    <label class="form-check-label" for="jobo">
+                    Josephine Butler
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="st-aidans">
+                    <label class="form-check-label" for="st-aidans">
+                    St Aidan's
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="st-chads">
+                    <label class="form-check-label" for="st-chads">
+                    St Chad's
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="st-cuths">
+                    <label class="form-check-label" for="st-cuths">
+                    St Cuthbert's Society
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="st-hild-bede">
+                    <label class="form-check-label" for="st-hild-bede">
+                    St Hild & St Bede
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="st-johns">
+                    <label class="form-check-label" for="st-johns">
+                    St John's
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="st-marys">
+                    <label class="form-check-label" for="st-marys">
+                    St Mary's
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="trevs">
+                    <label class="form-check-label" for="trevs">
+                    Trevelyan
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="university">
+                    <label class="form-check-label" for="university">
+                    University
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="ustinov">
+                    <label class="form-check-label" for="ustinov">
+                    Ustinov
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="van-mildert">
+                    <label class="form-check-label" for="van-mildert">
+                    Van Mildert
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="stephenson">
+                    <label class="form-check-label" for="stephenson">
+                    Stephenson
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="john-snow">
+                    <label class="form-check-label" for="john-snow">
+                    John Snow
+                    </label>
+                </div>
             </div>
-            
+            </div>
+
+            <div class="form-group">
             <div class="tab"><h3>Choose start and end bars:</h3>
               <p>2 dropdowns for start and end</p>
+              <div class="form-group">
+                <label for="exampleFormControlSelect1">Start</label>
+                <select class="form-control" id="exampleFormControlSelect1">
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="exampleFormControlSelect1">End</label>
+                <select class="form-control" id="exampleFormControlSelect1">
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                </select>
+              </div>
             </div>
-            
+            </div>
+
+            <div class="form-group">
             <div class="tab"><h3>Here's your route:</h3>
               <p>stick a map here my dude</p>
+            </div>
             </div>
             
             <div style="overflow:auto;">
@@ -44,10 +161,8 @@
               <span class="step"></span>
               <span class="step"></span>
               <span class="step"></span>
-              <span class="step"></span>
             </div>
-            
-            </form>            
+    </form>            
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
