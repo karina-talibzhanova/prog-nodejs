@@ -54,6 +54,19 @@ function validateForm() {
   //     valid = false;
   //   }
   // }
+  var count = 0;
+  if (currentTab == 0) {
+    for (i = 0; i < y.length; i++) {
+      if (y[i].checked == true) {
+        count += 1;
+      }
+    }
+    if (count < 2) {
+      valid = false;
+      alert("Error: please select 2 or more options.");
+    }
+  }
+
   // If the valid status is true, mark the step as finished and valid:
   if (valid) {
     document.getElementsByClassName("step")[currentTab].className += " finish";
