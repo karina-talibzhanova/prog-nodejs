@@ -1,5 +1,7 @@
 var currentTab = 0; // Current tab is set to be the first tab (0)
 showTab(currentTab); // Display the current tab
+var barList = ["Collingwood", "Grey", "Hatfield", "Josephine Butler", "St Aidan's", "St Chad's", "St Cuthbert's Society", "St Hild & St Bede",
+              "St John's", "St Mary's", "Trevelyan", "University", "Ustinov", "Van Mildert", "Stephenson", "John Snow"];
 
 function showTab(n) {
   // This function will display the specified tab of the form ...
@@ -41,19 +43,11 @@ function nextPrev(n) {
 
 function validateForm() {
   // This function deals with validation of the form fields
-  var x, y, i, valid = true;
+  var x, y, i, checkedBars, valid = true;
   x = document.getElementsByClassName("tab");
   y = x[currentTab].getElementsByTagName("input");
-  // A loop that checks every input field in the current tab:
-  // for (i = 0; i < y.length; i++) {
-  //   // If a field is empty...
-  //   if (y[i].checked == false) {
-  //     // add an "invalid" class to the field:
-  //     y[i].className += " invalid";
-  //     // and set the current valid status to false:
-  //     valid = false;
-  //   }
-  // }
+
+  // checks if fewer than 2 options have been selected on the first page of the form
   var count = 0;
   if (currentTab == 0) {
     for (i = 0; i < y.length; i++) {
@@ -65,6 +59,14 @@ function validateForm() {
       valid = false;
       alert("Error: please select 2 or more options.");
     }
+    checkedBars = getCheckedBoxes(y);  // gets the selected bars to use in the next tab
+    var contentStr, j;
+    for (j = 0; j < checkedBars.length; j++) {
+      contentStr += "<option>" + barList[checkedBars[j]] + "</option>"
+    }
+    console.log(contentStr);
+    document.getElementById("barDropDown1").innerHTML = contentStr;
+    document.getElementById("barDropDown2").innerHTML = contentStr;
   }
 
   // If the valid status is true, mark the step as finished and valid:
@@ -82,4 +84,15 @@ function fixStepIndicator(n) {
   }
   //... and adds the "active" class to the current step:
   x[n].className += " active";
+}
+
+function getCheckedBoxes(y) {
+  var i;
+  var checked = [];
+  for (i = 0; i < y.length; i++) {
+    if (y[i].checked == true)  {
+      checked.push(i);
+    }
+  }
+  return checked;
 }
