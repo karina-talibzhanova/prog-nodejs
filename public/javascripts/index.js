@@ -2,6 +2,7 @@ var currentTab = 0; // Current tab is set to be the first tab (0)
 showTab(currentTab); // Display the current tab
 var barList = ["Collingwood", "Grey", "Hatfield", "Josephine Butler", "St Aidan's", "St Chad's", "St Cuthbert's Society", "St Hild & St Bede",
               "St John's", "St Mary's", "Trevelyan", "University", "Ustinov", "Van Mildert", "Stephenson", "John Snow"];
+var checkedBars;
 
 function showTab(n) {
   // This function will display the specified tab of the form ...
@@ -43,7 +44,7 @@ function nextPrev(n) {
 
 function validateForm() {
   // This function deals with validation of the form fields
-  var x, y, i, checkedBars, valid = true;
+  var x, y, i, valid = true;
   x = document.getElementsByClassName("tab");
   y = x[currentTab].getElementsByTagName("input");
 
@@ -64,9 +65,18 @@ function validateForm() {
     for (j = 0; j < checkedBars.length; j++) {
       contentStr += "<option>" + barList[checkedBars[j]] + "</option>"
     }
-    console.log(contentStr);
     document.getElementById("barDropDown1").innerHTML = contentStr;
     document.getElementById("barDropDown2").innerHTML = contentStr;
+  }
+
+  if (currentTab == 1) {
+    var e = document.getElementById("barDropDown1");
+    var start = e.options[e.selectedIndex].text;
+    start = barList.indexOf(start);
+    var f = document.getElementById("barDropDown2");
+    var end = f.options[f.selectedIndex].text;
+    end = barList.indexOf(end);
+    getRoute(checkedBars, start, end);
   }
 
   // If the valid status is true, mark the step as finished and valid:
@@ -86,6 +96,7 @@ function fixStepIndicator(n) {
   x[n].className += " active";
 }
 
+// gets the selected checkboxes and puts their indexes in an array
 function getCheckedBoxes(y) {
   var i;
   var checked = [];
@@ -95,4 +106,42 @@ function getCheckedBoxes(y) {
     }
   }
   return checked;
+}
+
+function getRoute(chosenBars, start, end) {
+  // format the API call with the parameters required (origin, destination, waypoints, mode)
+  // need to remove special characters (', &) and replace spaces with +
+  var barsURL = '';
+  var i;
+  var indexStart = chosenBars.indexOf(start);
+  var indexEnd = chosenBars.indexOf(end);
+
+  start = barList[start];
+  end = barList[end];
+
+  start = start.replace(/[&']/g, '').replace(/ /g, "+").concat("+College");
+  end = end.replace(/[&']/g, '').replace(/ /g, "+").concat("+College");
+
+  console.log(chosenBars);
+
+  if (indexStart == indexEnd) {
+    chosenBars.splice(indexStart, 1);
+  } else if (indexStart < indexEnd) {
+    chosenBars.splice(indexEnd, 1);
+    chosenBars.splice(indexStart, 1);
+  } else {
+    chosenBars.splice(indexStart), 1;
+    chosenBars.splice(indexEnd, 1);
+  }
+
+  console.log(chosenBars);
+
+  for (i = 0; i < chosenBars.length; i++) {
+    barsURL = barsURL.concat(barList[chosenBars[i]].replace(/[&']/g, '').replace(/ /g, "+"), "+College", "|");
+  }
+  barsURL = barsURL.substring(0, barsURL.length - 1);
+  var url = "https://www.google.com/maps/embed/v1/directions?origin=" + start +"&destination=" + end +"&mode=walking&waypoints=" + barsURL + "&key=AIzaSyB1gzDLoW-T51QzWJ8BXAbQPYn2K_XQl_w"
+  console.log(url);
+  document.getElementById("route").innerHTML = "<iframe width=\"600\" height=\"450\" frameborder=\"0\" style=\"border:0\" src=\"" + url + "\" allowfullscreen></iframe>"
+
 }
