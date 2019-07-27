@@ -108,7 +108,7 @@ function getCheckedBoxes(y) {
   return checked;
 }
 
-function getRoute(chosenBars, start, end) {
+async function getRoute(chosenBars, start, end) {
   // format the API call with the parameters required (origin, destination, waypoints, mode)
   // need to remove special characters (', &) and replace spaces with +
   var barsURL = '';
@@ -122,8 +122,7 @@ function getRoute(chosenBars, start, end) {
   start = start.replace(/[&']/g, '').replace(/ /g, "+").concat("+College");
   end = end.replace(/[&']/g, '').replace(/ /g, "+").concat("+College");
 
-  console.log(chosenBars);
-
+  // removes start and end bars from chosen bar list
   if (indexStart == indexEnd) {
     chosenBars.splice(indexStart, 1);
   } else if (indexStart < indexEnd) {
@@ -134,13 +133,21 @@ function getRoute(chosenBars, start, end) {
     chosenBars.splice(indexEnd, 1);
   }
 
-  console.log(chosenBars);
-
   for (i = 0; i < chosenBars.length; i++) {
     barsURL = barsURL.concat(barList[chosenBars[i]].replace(/[&']/g, '').replace(/ /g, "+"), "+College", "|");
   }
   barsURL = barsURL.substring(0, barsURL.length - 1);
-  var url = "https://www.google.com/maps/embed/v1/directions?origin=" + start +"&destination=" + end +"&mode=walking&waypoints=" + barsURL + "&key=AIzaSyB1gzDLoW-T51QzWJ8BXAbQPYn2K_XQl_w"
+
+  // fetch('/optimizeRoute/' + start + '/' + end + '/' + barsURL);
+
+  let response = await fetch('optimizeRoute/' + start + '/' + end +'/' + barsURL);
+  console.log(response);
+  let body = await response.text();
+  console.log(body);
+  body = await JSON.parse(body);
+  console.log(body);
+
+  var url = "https://www.google.com/maps/embed/v1/directions?origin=" + start +"&destination=" + end +"&mode=walking&waypoints=" + barsURL + "&key=AIzaSyCekgB4vQu-raXkvMR_pZXFUmqCG7LIXj4"
   console.log(url);
   document.getElementById("route").innerHTML = "<iframe width=\"600\" height=\"450\" frameborder=\"0\" style=\"border:0\" src=\"" + url + "\" allowfullscreen></iframe>"
 
