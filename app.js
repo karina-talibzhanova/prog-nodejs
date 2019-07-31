@@ -1,9 +1,10 @@
 var express = require('express');
 var app = express();
 
+app.use(express.static('public'));
+
 const googleMapsClient = require('@google/maps').createClient({
   key: 'AIzaSyCekgB4vQu-raXkvMR_pZXFUmqCG7LIXj4',
-  Promise: Promise
 });
 
 var collegeCoords = {
@@ -25,8 +26,6 @@ var collegeCoords = {
   "John Snow": [54.759667, -1.580917],
 }
 
-app.use(express.static('public'));
-
 console.log("server running");
 
 function getRoute (req, callback)  {
@@ -38,37 +37,35 @@ function getRoute (req, callback)  {
   optimize: true,
 
   }, function(err, response) {
-    console.log(err);
-    console.log(response);
     if (!err) { 
       callback(response);
     };
   });
 };
 
-var inputs = {
-  origin: collegeCoords["Van Mildert"],
-  destination: collegeCoords["Hatfield"],
-  waypoints: [collegeCoords["Trevelyan"], collegeCoords["St Mary's"], collegeCoords["St Aidan's"]],
-};
 
-app.get('/test', function(req, resp) {
-  resp.send("test");
-});
+// get the origin, destination and waypoints
+// make the API call and get the waypoint order from the JSON
+// return the waypoint order so that the embedded map can show the optimal route
+app.get('/optimizeRoute/:start/:end/:waypoints', function(req, resp) {
 
-app.get('/optimizeRoute', function(req, resp) {
-  // get the origin, destination and waypoints
-  // make the API call and get the waypoint order from the JSON
-  // return the waypoint order so that the embedded map can show the optimal route
-  // calculate directions with a promise
-  // console.log("before google maps");
+  let waypointList = req.params.waypoints.split(",");
+
+  let waypointParam = [];
+  var i;
+  for (i = 0; i < waypointList.length; i++) {
+      waypointParam.push(collegeCoords[waypointList[i]]);
+  }
+
+  var inputs = {
+    origin: collegeCoords[req.params.start],
+    destination: collegeCoords[req.params.end],
+    waypoints: waypointParam
+  }
   
-  // getRoute(inputs, function(result){
-  //   console.log("Response: ", JSON.stringify(JSON.parse(JSON.stringify(result))))
-  //   resp.send(result);
-  // })
-  console.log("lol wut");
-  resp.send("yeeeet");
+  getRoute(inputs, function(result){
+    resp.send(result);
+  })
 
 });
 
