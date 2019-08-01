@@ -2,6 +2,26 @@ var currentTab = 0; // Current tab is set to be the first tab (0)
 showTab(currentTab); // Display the current tab
 var barList = ["Collingwood", "Grey", "Hatfield", "Josephine Butler", "St Aidan's", "St Chad's", "St Cuthbert's Society", "St Hild & St Bede",
               "St John's", "St Mary's", "Trevelyan", "University", "Ustinov", "Van Mildert", "Stephenson", "John Snow"];
+
+var collegeCoords = {
+  "Collingwood": [54.7629, -1.5765],
+  "Grey": [54.7648, -1.5756],
+  "Hatfield": [54.774305, -1.574551],
+  "Josephine Butler": [54.7598, -1.5798],
+  "St Aidan's": [54.7650, -1.5832],
+  "St Chad's": [54.772925, -1.574695],
+  "St Cuthbert's Society": [54.7708, -1.5774],
+  "St Hild & St Bede": [54.7775, -1.564815],
+  "St John's": [54.7719, -1.5757],
+  "St Mary's": [54.7663, -1.5778],
+  "Trevelyan": [54.7644, -1.5799],
+  "University": [54.7752, -1.5764],
+  "Ustinov": [54.769288, -1.591382],
+  "Van Mildert": [54.7632, -1.5811],
+  "Stephenson": [54.7596, -1.5813],
+  "John Snow": [54.759667, -1.580917],
+}
+
 var checkedBars;
 
 function showTab(n) {
@@ -112,15 +132,12 @@ async function getRoute(chosenBars, start, end) {
   // format the API call with the parameters required (origin, destination, waypoints, mode)
   // need to remove special characters (', &) and replace spaces with +
   var barsURL = '';
-  var i;
+  var i, j, k, m;
   var indexStart = chosenBars.indexOf(start);
   var indexEnd = chosenBars.indexOf(end);
 
   start = barList[start];
   end = barList[end];
-
-  start = start.replace(/[&']/g, '').replace(/ /g, "+").concat("+College");
-  end = end.replace(/[&']/g, '').replace(/ /g, "+").concat("+College");
 
   // removes start and end bars from chosen bar list
   if (indexStart == indexEnd) {
@@ -133,22 +150,41 @@ async function getRoute(chosenBars, start, end) {
     chosenBars.splice(indexEnd, 1);
   }
 
-  for (i = 0; i < chosenBars.length; i++) {
-    barsURL = barsURL.concat(barList[chosenBars[i]].replace(/[&']/g, '').replace(/ /g, "+"), "+College", "|");
+  let waypoints = [];
+
+  for (j = 0; j < chosenBars.length; j++) {
+    waypoints.push(barList[chosenBars[j]]);
   }
-  barsURL = barsURL.substring(0, barsURL.length - 1);
-
-  // fetch('/optimizeRoute/' + start + '/' + end + '/' + barsURL);
-
-  let response = await fetch('optimizeRoute/' + start + '/' + end +'/' + barsURL);
-  console.log(response);
+ 
+  let response = await fetch('/optimizeRoute/' + start + '/' + end + '/' + waypoints);
   let body = await response.text();
-  console.log(body);
-  body = await JSON.parse(body);
-  console.log(body);
+
+  body = JSON.parse(body);
+  let waypointOrder = body.json.routes[0].waypoint_order;  // an array containing the indexes of the waypoints in the optimal order
+
+  let waypointCollegeName = [];
+
+  for (k = 0; k < waypointOrder.length; k++) {
+    waypointCollegeName.push(waypoints[waypointOrder[k]]);
+  }
+
+  let waypointCoords = [];
+
+  for (m = 0; m < waypointCollegeName.length; m++) {
+    waypointCoords.push(collegeCoords[waypointCollegeName[m]]);
+  }
+
+  start = collegeCoords[start];
+  end = collegeCoords[end];
+
+  for (i = 0; i < waypointCoords.length; i++) {
+    barsURL = barsURL.concat(waypointCoords[i], "|");
+  }
+
+  barsURL = barsURL.substring(0, barsURL.length - 1);
 
   var url = "https://www.google.com/maps/embed/v1/directions?origin=" + start +"&destination=" + end +"&mode=walking&waypoints=" + barsURL + "&key=AIzaSyCekgB4vQu-raXkvMR_pZXFUmqCG7LIXj4"
   console.log(url);
-  document.getElementById("route").innerHTML = "<iframe width=\"600\" height=\"450\" frameborder=\"0\" style=\"border:0\" src=\"" + url + "\" allowfullscreen></iframe>"
+  document.getElementById("route").innerHTML = "<h1>Here's your route:</h1><iframe width=\"600\" height=\"450\" frameborder=\"0\" style=\"border:0\" src=\"" + url + "\" allowfullscreen></iframe>"
 
 }
