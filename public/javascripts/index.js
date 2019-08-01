@@ -118,9 +118,8 @@ function fixStepIndicator(n) {
 
 // gets the selected checkboxes and puts their indexes in an array
 function getCheckedBoxes(y) {
-  var i;
   var checked = [];
-  for (i = 0; i < y.length; i++) {
+  for (var i = 0; i < y.length; i++) {
     if (y[i].checked == true)  {
       checked.push(i);
     }
@@ -129,10 +128,7 @@ function getCheckedBoxes(y) {
 }
 
 async function getRoute(chosenBars, start, end) {
-  // format the API call with the parameters required (origin, destination, waypoints, mode)
-  // need to remove special characters (', &) and replace spaces with +
   var barsURL = '';
-  var i, j, k, m;
   var indexStart = chosenBars.indexOf(start);
   var indexEnd = chosenBars.indexOf(end);
 
@@ -151,9 +147,8 @@ async function getRoute(chosenBars, start, end) {
   }
 
   let waypoints = [];
-
-  for (j = 0; j < chosenBars.length; j++) {
-    waypoints.push(barList[chosenBars[j]]);
+  for (var i = 0; i < chosenBars.length; i++) {
+    waypoints.push(barList[chosenBars[i]]);
   }
  
   let response = await fetch('/optimizeRoute/' + start + '/' + end + '/' + waypoints);
@@ -163,28 +158,40 @@ async function getRoute(chosenBars, start, end) {
   let waypointOrder = body.json.routes[0].waypoint_order;  // an array containing the indexes of the waypoints in the optimal order
 
   let waypointCollegeName = [];
-
-  for (k = 0; k < waypointOrder.length; k++) {
-    waypointCollegeName.push(waypoints[waypointOrder[k]]);
+  for (var j = 0; j < waypointOrder.length; j++) {
+    waypointCollegeName.push(waypoints[waypointOrder[j]]);
   }
 
   let waypointCoords = [];
-
-  for (m = 0; m < waypointCollegeName.length; m++) {
-    waypointCoords.push(collegeCoords[waypointCollegeName[m]]);
+  for (var k = 0; k < waypointCollegeName.length; k++) {
+    waypointCoords.push(collegeCoords[waypointCollegeName[k]]);
   }
+
+  // creating a list of the bars to visit in the optimal order to show to the user
+  // since by using coordinates with google maps, it does not show the college name
+  let routeList = waypointCollegeName;
+  routeList.unshift(start);
+  routeList.push(end);
 
   start = collegeCoords[start];
   end = collegeCoords[end];
 
-  for (i = 0; i < waypointCoords.length; i++) {
-    barsURL = barsURL.concat(waypointCoords[i], "|");
+  for (var m = 0; m < waypointCoords.length; m++) {
+    barsURL = barsURL.concat(waypointCoords[m], "|");
   }
 
   barsURL = barsURL.substring(0, barsURL.length - 1);
 
+  // format the API call with the parameters required (origin, destination, waypoints, mode)
   var url = "https://www.google.com/maps/embed/v1/directions?origin=" + start +"&destination=" + end +"&mode=walking&waypoints=" + barsURL + "&key=AIzaSyCekgB4vQu-raXkvMR_pZXFUmqCG7LIXj4"
-  console.log(url);
-  document.getElementById("route").innerHTML = "<h1>Here's your route:</h1><iframe width=\"600\" height=\"450\" frameborder=\"0\" style=\"border:0\" src=\"" + url + "\" allowfullscreen></iframe>"
+
+  document.getElementById("route").innerHTML = "<iframe width=\"600\" height=\"450\" frameborder=\"0\" style=\"border:0\" src=\"" + url + "\" allowfullscreen></iframe>"
+
+  let routeListHTML = "";
+  for (var n = 0; n < routeList.length; n++) {
+    routeListHTML += "<li>" + routeList[n] + "</li>";
+  }
+
+  document.getElementById("route-list").innerHTML = "<ul>" + routeListHTML + "</ul>"
 
 }
