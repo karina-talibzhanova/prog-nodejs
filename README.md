@@ -1,5 +1,7 @@
 # Bar Crawl Planner
 
+**The API key in the code has been deactivated. If you would like to use this, you will need to supply your own API key from Google Maps Platform**
+
 ## Usage
 
 Before the website can be used, modules must be installed by running `npm install` on the command line. The server can be started by then running `npm start`. The website will then be available at [localhost:3000](http://localhost:3000).
